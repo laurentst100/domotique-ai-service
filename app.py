@@ -38,13 +38,13 @@ def analyze_anomaly():
         device_id = data['deviceId']
         power_array = np.array([[power_value]])
         prediction = anomaly_model.predict(power_array)
-        is_anomaly = prediction[0] == -1
-        anomaly_score = anomaly_model.decision_function(power_array)[0]
+        is_anomaly = bool(prediction[0] == -1)  # <-- Correction ici
+        anomaly_score = float(anomaly_model.decision_function(power_array)[0])
         response = {
             "deviceId": device_id,
             "power_consumption": power_value,
             "is_anomaly": is_anomaly,
-            "anomaly_score": float(anomaly_score),
+            "anomaly_score": anomaly_score,
             "analysis_timestamp": datetime.now().isoformat()
         }
         return jsonify(response)
